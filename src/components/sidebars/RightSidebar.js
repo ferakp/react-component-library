@@ -18,14 +18,12 @@ export class RightSidebar extends React.Component {
     this.posX = event.clientX;
     document.onmousemove = this.dragElement;
     document.onmouseup = this.stopDragElement;
-
     event.preventDefault();
   };
 
   dragElement = (event) => {
     event = event || window.event;
     event.preventDefault();
-
     let posXDiff = this.posX - event.clientX;
     this.posX = event.clientX;
     this.setState({ width: this.state.width + posXDiff });
