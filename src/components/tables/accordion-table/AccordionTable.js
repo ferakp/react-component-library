@@ -16,7 +16,6 @@ export class AccordionTable extends React.Component {
   };
 
   updateLayout = () => {
-    console.log("called");
     let oldCount = this.state.maxElementCount;
     this.setState({
       maxElementCount: Math.floor(this.wrapperRef.current.clientWidth / 155),
@@ -76,7 +75,7 @@ export class AccordionTable extends React.Component {
             {this.props.object?.rows.map((row, indexR) => {
               return (
                 <React.Fragment key={"rf" + indexR}>
-                  <tr key={"tr" + indexR} className={styles.dataRows}>
+                  <tr key={"tr" + indexR} className={`${indexR % 2 === 0 ? styles.dataRowEven : ""} ${styles.dataRows}`}>
                     {row.map((el, index) => {
                       if (
                         index + 2 > this.state.maxElementCount &&
