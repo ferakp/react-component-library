@@ -3,7 +3,7 @@ import styles from "./AccordionTable.module.css";
 import { debounce } from "../../libs/utilities";
 
 export class AccordionTable extends React.Component {
-  state = { maxElementCount: 99, accordionOpen: false, accordionIndex: 0 };
+  state = { maxElementCount: 99, accordionOpen: false, accordionIndex: 0, accordionHeight: 0 };
 
   constructor(props) {
     super(props);
@@ -17,11 +17,12 @@ export class AccordionTable extends React.Component {
 
   updateLayout = () => {
     let oldCount = this.state.maxElementCount;
+    let newCount = Math.floor(this.wrapperRef.current.clientWidth / 155);
+    if (newCount < 3) this.setState({ maxElementCount: 3 });
+    if (newCount > this.props.object?.headers.length) newCount = this.props.object?.headers.length;
     this.setState({
-      maxElementCount: Math.floor(this.wrapperRef.current.clientWidth / 155),
-    });
-    if (this.state.maxElementCount < 3) this.setState({ maxElementCount: 3 });
-    if (this.state.maxElementCount != oldCount) this.render();
+        maxElementCount: newCount,
+      });
   };
 
   componentDidMount() {
@@ -37,7 +38,9 @@ export class AccordionTable extends React.Component {
     this.setState({
       accordionOpen: !this.state.accordionOpen,
       accordionIndex: index,
+      accordionHeight: 0
     });
+    setTimeout(() => this.setState({accordionHeight: 150}), 0);
   };
 
   addSettings = () => {
@@ -48,7 +51,7 @@ export class AccordionTable extends React.Component {
       this.props.object.headers.push("Settings");
       !this.props.object?.rows ||
         this.props.object.rows.forEach((element) => {
-          element.push("Open");
+          element.push(["Open", "Close"]);
         });
     }
   };
@@ -90,14 +93,14 @@ export class AccordionTable extends React.Component {
                           key={"td" + index}
                           onClick={() => this.switchAccordion(indexR)}
                         >
-                          {`${el}`}&nbsp; &#x2c4;
+                          {`${el[1]}`}&nbsp; &#x2191;
                         </td>
                       ) : (
                         <td
                           key={"td" + index}
                           onClick={() => this.switchAccordion(indexR)}
                         >
-                          {`${el}`}&nbsp; &#x2c5;
+                          {`${el[0]}`}&nbsp; &#x2193;
                         </td>
                       );
                     })}
@@ -110,16 +113,15 @@ export class AccordionTable extends React.Component {
                         ? styles.accordionOpen
                         : styles.accordionClose
                     }
+                    style={{height: this.state.accordionHeight+"px"}}
                   >
                     <td
                       colSpan={
-                        this.props.object.rows.length <=
                         this.state.maxElementCount
-                          ? this.state.maxElementCount
-                          : this.state.maxElementCount + 1
                       }
                     >
                       <div className={styles.accordionContainer}>
+                          <p>s</p>
                       </div>
                     </td>
                   </tr>

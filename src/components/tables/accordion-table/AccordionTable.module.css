@@ -47,5 +47,6 @@
 
   .accordionOpen {
       display: table-row;
+      width: 100%;
       transition: all 1s;
   }
